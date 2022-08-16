@@ -6,6 +6,7 @@ import {
   UnorderedList,
   Text,
   Button,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
 import { motion } from "framer-motion";
@@ -15,9 +16,11 @@ import { useAuth } from "../provider/AuthProvider";
 
 function Navbar({ children }) {
   const { auth, setAuth } = useAuth();
-
+  const bg = useColorModeValue("primary-light.200", "primary-dark.300");
+  const color = useColorModeValue("primary-light.400", "primary-dark.200");
+ 
   function SignIn() {
-    console.log('Sign In');
+    console.log("Sign In");
     setAuth(true);
   }
 
@@ -25,10 +28,10 @@ function Navbar({ children }) {
     console.log("Sign Out");
     setAuth(false);
   }
-  
+
   return (
     <>
-      <Flex padding="4">
+      <Flex padding="4" backgroundColor={bg} color={color}>
         <Box width="70%">
           <Text fontSize="xl" textTransform="uppercase">
             Codify

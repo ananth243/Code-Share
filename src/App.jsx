@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { useAuth } from "./provider/AuthProvider";
 import Navbar from "./components/Navbar";
+import Index from "./routes/Index";
 
 function App() {
   const { auth, setAuth } = useAuth();
@@ -15,7 +16,7 @@ function App() {
     <Navbar>
       <Router>
         <Routes>
-          <Route element={<div className="App">Hello World</div>} path="/" />
+          <Route element={<Index />} path="/" />
           <Route element={<div className="App">Error</div>} path="/404" />
           <Route path="*" element={<div className="App">Error</div>} />
         </Routes>
