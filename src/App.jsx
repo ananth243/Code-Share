@@ -5,7 +5,6 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import "./App.css";
 import { useAuth } from "./provider/AuthProvider";
 import Navbar from "./components/Navbar";
 
