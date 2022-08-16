@@ -10,7 +10,9 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { motion } from "framer-motion";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { ColorModeSwitcher } from "./ColorModeSwitch";
+import { auth as firebaseAuth } from "../config/Firebase";
 import { FaCode } from "react-icons/fa";
 import { useAuth } from "../provider/AuthProvider";
 
@@ -18,15 +20,22 @@ function Navbar({ children }) {
   const { auth, setAuth } = useAuth();
   const bg = useColorModeValue("primary-light.200", "primary-dark.300");
   const color = useColorModeValue("primary-light.400", "primary-dark.200");
- 
-  function SignIn() {
-    console.log("Sign In");
-    setAuth(true);
+
+  async function SignIn() {
+    try {
+      const google = new GoogleAuthProvider();
+      const { user } = await signInWithPopup(firebaseAuth, google);
+      setAuth(user);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  function SignOut() {
-    console.log("Sign Out");
-    setAuth(false);
+  async function SignOut() {
+    try {
+      await signOut(firebaseAuth);
+      setAuth(null);
+    } catch (error) {}
   }
 
   return (
@@ -56,6 +65,7 @@ function Navbar({ children }) {
                 {!auth ? "Sign In" : "Sign Out"}
               </Button>
             </ListItem>
+
             <ListItem>
               <ColorModeSwitcher />
             </ListItem>

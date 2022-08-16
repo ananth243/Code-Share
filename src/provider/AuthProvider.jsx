@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-
+import { auth as firebaseAuth } from "../config/Firebase";
 const AuthProvider = createContext();
 
 export function useAuth() {
@@ -7,7 +7,11 @@ export function useAuth() {
 }
 
 export default function AuthState({ children }) {
-  const [auth, setAuth] = useState(false);
+  const [auth, setAuth] = useState(null);
+  firebaseAuth.onAuthStateChanged((user) => {
+    if(user) setAuth(user);
+    else setAuth(null);
+  });
   return (
     <AuthProvider.Provider value={{ auth, setAuth }}>
       {children}
