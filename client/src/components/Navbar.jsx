@@ -57,7 +57,7 @@ function Navbar({ children }) {
             display="flex"
             alignItems="center"
           >
-            Codify
+            Code Share
             <Icon marginLeft="2" fontSize="lg" as={FaCode} />
           </Link>
         </Box>

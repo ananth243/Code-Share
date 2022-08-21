@@ -16,14 +16,14 @@ function Index() {
       {!intro && (
         <Box>
           <Flex alignItems="center" fontSize="5xl">
-            <Text textTransform="uppercase">Codify</Text>
+            <Text textTransform="uppercase">Code Share</Text>
             <Icon marginLeft="1" as={FaCode} />
           </Flex>
           <Text fontSize="xl">
-            Welcome to Codify. A platform for sharing code.
+            Welcome to Code Share. A platform for sharing code.
             <br />
             Sign in to save your links! Links are deleted automatically after
-            every 72 hours if they are not saved!
+            every 24 hours if they are not saved!
           </Text>
           <Button
             marginTop="2rem"
