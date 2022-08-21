@@ -38,7 +38,7 @@ function Editor() {
             );
             // Redirect to url
             navigate("/" + result.data.url);
-          } catch (e) {
+          } catch (error) {
             if (error.response.status === 401) {
               localStorage.removeItem("jwt");
               setAuth(null);
