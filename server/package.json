@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app",
     "dev": "nodemon app",
+    "build":"cd ../client/ && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -10,5 +10,5 @@ module.exports.corsMiddleware = (req, res, next) => {
 
 module.exports.errorMiddleware = (err, req, res, next) => {
   console.log(err);
-  res.json({ error: err.message });
+  res.status(500 || err.status).json({ error: err.message });
 };
