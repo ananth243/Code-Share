@@ -23,10 +23,15 @@ function Links() {
   useEffect(() => {
     async function fetchLinks() {
       try {
-        const res = await get(import.meta.env.VITE_BACKEND_URL + "/all-links", {
-          headers: { token: localStorage.getItem("jwt") },
-        });
-        setLinks(res.data.links);
+        if (auth) {
+          const res = await get(
+            import.meta.env.VITE_BACKEND_URL + "/all-links",
+            {
+              headers: { token: localStorage.getItem("jwt") },
+            }
+          );
+          setLinks(res.data.links);
+        }
       } catch (error) {
         if (error.response && error.response.status === 401) {
           setAuth(false);
