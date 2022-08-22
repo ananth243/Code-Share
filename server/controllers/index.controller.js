@@ -9,7 +9,7 @@ module.exports.getAllURLs = async (req, res, next) => {
     const { token: jwt } = req.headers;
     const { id } = decodeJWT(jwt, next);
     const links = await db.link.findAndCountAll({ where: { userId: id } });
-    res.json({ links });
+    res.status(200).json({ links });
   } catch (error) {
     next(error);
   }
@@ -46,7 +46,7 @@ module.exports.addURL = async (req, res, next) => {
       obj.userId = id;
     }
     await db.link.create(obj);
-    res.json({ url });
+    res.status(200).json({ url });
   } catch (error) {
     next(error);
   }
@@ -58,8 +58,12 @@ module.exports.getURL = async (req, res, next) => {
       const link = await db.link.findOne({
         where: { url },
       });
-      if (!link) return res.status(404).json({ error: "URL not found" });
-      res.json({ code: link.code, lang: link.lang });
+      if (!link){
+        let error = new Error("Not found");
+        error.status = 404;
+        throw error;
+      }
+      res.status(200).json({ code: link.code, lang: link.lang });
     } catch (error) {
       next(error);
     }

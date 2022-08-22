@@ -9,6 +9,7 @@ import {
   useColorModeValue,
   Avatar,
   Link,
+  useToast,
 } from "@chakra-ui/react";
 import React from "react";
 import { motion } from "framer-motion";
@@ -24,26 +25,53 @@ function Navbar({ children }) {
   const bg = useColorModeValue("primary-light.200", "primary-dark.300");
   const color = useColorModeValue("primary-light.400", "primary-dark.200");
   const profilebg = useColorModeValue("primary-light.100", "primary-dark.400");
+  const alert = useToast();
+
   const SignIn = useGoogleLogin({
-    onError: (error) => {
-      throw error;
-    },
+    onError: (error) =>
+      alert({
+        title: "Error",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      }),
     onSuccess: async ({ access_token }) => {
-      const result = await get(import.meta.env.VITE_BACKEND_URL + "/login", {
-        method: "GET",
-        headers: { token: access_token },
-      });
-      const { jwt } = result.data;
-      localStorage.setItem("jwt", jwt);
-      setAuth(decodeToken(jwt));
+      try {
+        const result = await get(import.meta.env.VITE_BACKEND_URL + "/login", {
+          method: "GET",
+          headers: { token: access_token },
+        });
+        const { jwt } = result.data;
+        localStorage.setItem("jwt", jwt);
+        setAuth(decodeToken(jwt));
+      } catch (error) {
+        if (error.response)
+          alert({
+            title: "Error",
+            description: error.response.data.error,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+          });
+        else
+          alert({
+            title: "Error",
+            description: error.message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+          });
+      }
     },
   });
 
-  async function SignOut() {
-    try {
-      localStorage.removeItem("jwt");
-      setAuth(null);
-    } catch (error) {}
+  function SignOut() {
+    localStorage.removeItem("jwt");
+    setAuth(null);
   }
 
   return (

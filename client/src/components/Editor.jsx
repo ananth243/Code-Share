@@ -1,4 +1,4 @@
-import { Textarea, useColorModeValue } from "@chakra-ui/react";
+import { Textarea, useColorModeValue, useToast } from "@chakra-ui/react";
 import React from "react";
 import { post } from "axios";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { useAuth } from "../provider/AuthProvider";
 
 function Editor() {
   const navigate = useNavigate();
+  const alert = useToast();
   const bg = useColorModeValue("primary-dark.100", "primary-dark.400");
   const { setAuth } = useAuth();
   return (
@@ -25,6 +26,9 @@ function Editor() {
             let obj = {
               content: e.target.value,
             };
+            if(obj.content.length > 10000) {
+              throw Error("Code should be within 10000 characters");
+            }
             if (localStorage.getItem("jwt"))
               obj.jwt = localStorage.getItem("jwt");
             const result = await post(
@@ -39,11 +43,27 @@ function Editor() {
             // Redirect to url
             navigate("/" + result.data.url);
           } catch (error) {
-            if (error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
               localStorage.removeItem("jwt");
               setAuth(null);
-            }
-            console.error(e);
+            } else if (error.response)
+              alert({
+                title: "Error",
+                description: error.response.data.error,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top",
+              });
+            else
+              alert({
+                title: "Error",
+                description: error.message,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "top",
+              });
           }
         }
       }}

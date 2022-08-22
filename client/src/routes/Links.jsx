@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/AuthProvider";
 import { get } from "axios";
 import {
@@ -14,14 +13,13 @@ import {
   Center,
   Link,
   Tag,
+  useToast,
 } from "@chakra-ui/react";
 
 function Links() {
   const { auth, setAuth } = useAuth();
-  console.log(auth);
   const [links, setLinks] = useState(null);
-  const navigate = useNavigate();
-
+  const alert = useToast();
   useEffect(() => {
     async function fetchLinks() {
       try {
@@ -30,11 +28,28 @@ function Links() {
         });
         setLinks(res.data.links);
       } catch (error) {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           setAuth(false);
           localStorage.removeItem("jwt");
-          navigate("/");
-        }
+          setLinks(null);
+        } else if (error.response) {
+          alert({
+            title: "Error",
+            description: error.response.data.error,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+          });
+        } else
+          alert({
+            title: "Error",
+            description: error.message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+          });
       }
     }
     fetchLinks();
